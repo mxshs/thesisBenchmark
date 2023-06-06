@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-ticker-candles
+spec:
+  selector:
+    matchLabels:
+      app: postgres-ticker-candles
+  template:
+    metadata:
+      labels:
+        app: postgres-ticker-candles
+    spec:
+      containers:
+        - name: postgres-ticker-candles
+          image: postgres:12
+          imagePullPolicy: "IfNotPresent"
+          ports:
+          - containerPort: 5432
+          envFrom:
+          - configMapRef:
+              name: db-env
+          volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: ticker-candles-data
+            subPath: postgres
+      volumes:
+      - name: ticker-candles-data
+        persistentVolumeClaim:
+          claimName: ticker-candles-claim
+

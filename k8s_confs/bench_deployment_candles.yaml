@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: candles
+spec:
+  selector:
+    matchLabels:
+      app: candles
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: candles
+    spec:
+      containers:
+      - name: candles
+        image: candles:v1
+        ports:
+        - containerPort: 9002
+      volumes:
+      - name: candles-data
+        persistentVolumeClaim:
+          claimName: candles-claim

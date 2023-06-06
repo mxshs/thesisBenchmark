@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-env
+  labels:
+    app: postgres-env
+data:
+  POSTGRES_DB: --
+  POSTGRES_USER: --
+  POSTGRES_PASSWORD: --

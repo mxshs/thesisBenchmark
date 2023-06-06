@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-tickers
+spec:
+  selector:
+    matchLabels:
+      app: postgres-tickers
+  template:
+    metadata:
+      labels:
+        app: postgres-tickers
+    spec:
+      containers:
+        - name: postgres-tickers
+          image: postgres:12
+          imagePullPolicy: "IfNotPresent"
+          ports:
+          - containerPort: 5432
+          envFrom:
+          - configMapRef:
+              name: db-env
+          volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: tickers-data
+            subPath: postgres
+      volumes:
+      - name: tickers-data
+        persistentVolumeClaim:
+          claimName: tickers-claim

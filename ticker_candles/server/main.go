@@ -52,7 +52,7 @@ func main() {
 
 	reg.MustRegister(metrics.TTS, metrics.TotalRequests)
 
-	pusher = push.New("bench-prom-prometheus-pushgateway:9091", "ticker_metrics").Gatherer(reg)
+	pusher = push.New("", "ticker_metrics").Gatherer(reg)
 
 	grpcServer.Serve(listener)
 }

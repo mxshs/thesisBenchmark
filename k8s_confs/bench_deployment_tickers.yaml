@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tickers
+spec:
+  selector:
+    matchLabels:
+      app: tickers
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: tickers
+    spec:
+      containers:
+      - name: tickers
+        image: tickers:v1
+        ports:
+        - containerPort: 9002
+      volumes:
+      - name: tickers-data
+        persistentVolumeClaim:
+          claimName: tickers-claim

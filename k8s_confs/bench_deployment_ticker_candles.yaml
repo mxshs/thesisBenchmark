@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ticker-candles
+spec:
+  selector:
+    matchLabels:
+      app: ticker-candles
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: ticker-candles
+    spec:
+      containers:
+      - name: ticker-candles
+        image: ticker_candles:v1
+        ports:
+        - containerPort: 9002
+      volumes:
+      - name: ticker-candles-data
+        persistentVolumeClaim:
+          claimName: ticker-candles-claim

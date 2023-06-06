@@ -16,9 +16,9 @@ type server struct {
 
 func (*server) GetPrices(ctx context.Context, inp *candlesproto.TickerId) (*candlesproto.CandlesResponse, error) {
 
-	prom := db.CallDB(inp)
+	p := db.CallDB(inp)
 
-	return <-prom, nil
+	return <-p, nil
 }
 
 func main() {

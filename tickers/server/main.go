@@ -27,7 +27,7 @@ func GetCandles(ctx context.Context, inp *tickersproto.TickerId) <-chan (*candle
 
 	go func() {
 
-		conn, err := grpc.Dial("candles:9002", grpc.WithTransportCredentials(insecure.NewCredentials()))
+		conn, err := grpc.Dial("", grpc.WithTransportCredentials(insecure.NewCredentials()))
 		if err != nil {
 			panic(err)
 		}
@@ -81,7 +81,7 @@ func main() {
 
 	reg.MustRegister(metrics.TTS, metrics.TotalRequests)
 
-	pusher = push.New("bench-prom-prometheus-pushgateway:9091", "ticker_metrics").Gatherer(reg)
+	pusher = push.New("", "ticker_metrics").Gatherer(reg)
 
 	grpcServer.Serve(listener)
 }

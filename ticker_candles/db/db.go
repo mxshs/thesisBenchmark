@@ -7,13 +7,9 @@ import (
 	"github.com/lib/pq"
 )
 
-type DB struct {
-	db *sql.DB
-}
+var DB *sql.DB
 
-var DBInstance *DB
-
-func (db DB) GetTickerData(input *protos.TickerId) <-chan ([]*protos.TickerData) {
+func GetTickerData(input *protos.TickerId, db *sql.DB) <-chan ([]*protos.TickerData) {
 
 	ch := make(chan []*protos.TickerData)
 
@@ -23,7 +19,7 @@ func (db DB) GetTickerData(input *protos.TickerId) <-chan ([]*protos.TickerData)
 
 		res := []*protos.TickerData{}
 
-		ts, err := db.db.Query("SELECT * FROM tickers WHERE ticker_id = any($1)", pq.Array(input.TickerId))
+		ts, err := db.Query("SELECT * FROM tickers WHERE ticker_id = any($1)", pq.Array(input.TickerId))
 		if err != nil {
 			panic(err)
 		}
@@ -45,7 +41,7 @@ func (db DB) GetTickerData(input *protos.TickerId) <-chan ([]*protos.TickerData)
 	return ch
 }
 
-func (db DB) GetCandlesData(input *protos.TickerId) <-chan ([]*protos.CandleData) {
+func GetCandlesData(input *protos.TickerId, db *sql.DB) <-chan ([]*protos.CandleData) {
 
 	ch := make(chan []*protos.CandleData)
 
@@ -55,7 +51,7 @@ func (db DB) GetCandlesData(input *protos.TickerId) <-chan ([]*protos.CandleData
 
 		res := []*protos.CandleData{}
 
-		cs, err := db.db.Query("SELECT * FROM candles WHERE ticker_id = any($1)", pq.Array(input.TickerId))
+		cs, err := db.Query("SELECT * FROM candles WHERE ticker_id = any($1)", pq.Array(input.TickerId))
 		if err != nil {
 			panic(err)
 		}
@@ -77,29 +73,19 @@ func (db DB) GetCandlesData(input *protos.TickerId) <-chan ([]*protos.CandleData
 	return ch
 }
 
-func SetDB() (*DB, error) {
+func CallDB(input *protos.TickerId) (<-chan ([]*protos.TickerData), <-chan ([]*protos.CandleData)) {
 
-	if DBInstance == nil {
+	if DB == nil {
 
-		connDef := "host=postgres-ticker-candles user=test password=test dbname=test sslmode=disable"
+		connDef := ""
 
 		db, err := sql.Open("postgres", connDef)
 		if err != nil {
-			return nil, err
+			panic(err)
 		}
 
-		DBInstance = &DB{db: db}
+		DB = db
 	}
 
-	return DBInstance, nil
-}
-
-func CallDB(input *protos.TickerId) (<-chan ([]*protos.TickerData), <-chan ([]*protos.CandleData)) {
-
-	db, err := SetDB()
-	if err != nil {
-		panic(err)
-	}
-
-	return db.GetTickerData(input), db.GetCandlesData(input)
+	return GetTickerData(input, DB), GetCandlesData(input, DB)
 }

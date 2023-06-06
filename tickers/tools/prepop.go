@@ -36,7 +36,7 @@ func main() {
 
 	instrumentsService := client.NewInstrumentsServiceClient()
 
-	connDef := "host=postgres-tickers user=test password=test dbname=test sslmode=disable"
+	connDef := ""
 
 	db, err := sql.Open("postgres", connDef)
 	if err != nil {

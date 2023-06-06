@@ -18,6 +18,6 @@ func SetMetrics() {
 		prometheus.HistogramOpts{
 			Name:    "time_2_serve_ticker",
 			Help:    "Time needed to serve a request to tickers RPC",
-			Buckets: prometheus.LinearBuckets(0, 50, 20),
+			Buckets: prometheus.LinearBuckets(0, 1, 20),
 		})
 }

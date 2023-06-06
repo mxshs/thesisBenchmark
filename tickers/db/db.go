@@ -44,7 +44,8 @@ func QueryDB(input *tickersproto.TickerId, db *sql.DB) <-chan ([]*tickersproto.T
 func CallDB(input *tickersproto.TickerId) <-chan ([]*tickersproto.TickerData) {
 
 	if DB == nil {
-		connDef := "host=postgres-tickers user=test password=test dbname=test sslmode=disable"
+
+		connDef := ""
 
 		db, err := sql.Open("postgres", connDef)
 		if err != nil {

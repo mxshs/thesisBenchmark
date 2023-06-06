@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-candles
+spec:
+  selector:
+    matchLabels:
+      app: postgres-candles
+  template:
+    metadata:
+      labels:
+        app: postgres-candles
+    spec:
+      containers:
+        - name: postgres-candles
+          image: postgres:12
+          imagePullPolicy: "IfNotPresent"
+          ports:
+          - containerPort: 5432
+          envFrom:
+          - configMapRef:
+              name: db-env
+          volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: candles-data
+            subPath: postgres
+      volumes:
+      - name: candles-data
+        persistentVolumeClaim:
+          claimName: candles-claim
