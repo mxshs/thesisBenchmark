@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package candlesproto;
+
+option go_package = "mxshs/tickers/protos/candlesproto";
+
+message Candle {
+    string ticker = 1;
+    float low = 2;
+    float high = 3;
+    float open = 4;
+    float close = 5;
+}
+
+message TickerId {
+    repeated string ticker_id = 1;
+}
+
+message CandlesResponse {
+    repeated Candle prices = 1;
+}
+
+service StockService {
+    rpc GetPrices(TickerId) returns (CandlesResponse) {}
+}

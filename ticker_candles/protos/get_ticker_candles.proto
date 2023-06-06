@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option go_package = "/protos";
+
+package protos;
+
+message TickerData {
+    string ticker_id = 1;
+    string ticker = 2;
+    string class_code = 3;
+    string instrument_type = 4;
+    string name = 5;
+}
+
+message CandleData {
+    string ticker = 1;
+    float low = 2;
+    float high = 3;
+    float open = 4;
+    float close = 5;
+}
+
+message TickerId {
+    repeated string ticker_id = 1;
+}
+
+message TickerCandlesResponse {
+    repeated TickerData tickers = 1;
+    repeated CandleData candles = 2;
+}
+
+service TickerService {
+    rpc GetTickerCandles(TickerId) returns (TickerCandlesResponse) {}
+}

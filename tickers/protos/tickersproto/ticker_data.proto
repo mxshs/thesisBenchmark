@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option go_package = "mxshs/tickers/protos/tickersproto";
+
+package tickers;
+
+import "mxshs/tickers/protos/candlesproto/get_candles.proto";
+
+message TickerData {
+    string ticker_id = 1;
+    string ticker = 2;
+    string class_code = 3;
+    string instrument_type = 4;
+    string name = 5;
+}
+
+message TickerId {
+    repeated string ticker_id = 1;
+}
+
+message TickerResponse {
+    repeated TickerData tickers = 1;
+    repeated candlesproto.Candle candles = 2;
+}
+
+service TickerService {
+    rpc GetTickers(TickerId) returns (TickerResponse) {}
+}
